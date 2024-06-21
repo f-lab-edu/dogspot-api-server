@@ -1,0 +1,55 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  Int       @id @default(autoincrement())
+  email               String    @unique
+  nickname            String
+  profilePath         String?
+  agreeWithMarketing  Boolean
+  loginMethod         String?
+  refresh_token       String?
+  password            String
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  deleted_at         DateTime
+
+  walksBoards         walksBoard[]
+}
+
+
+model boardMedia {
+  id             Int       @id @default(autoincrement())
+  walksBoardIdx  Int
+  type           String
+  thumbnail      String
+  url            String
+  walksBoard     walksBoard @relation(fields: [walksBoardIdx], references: [id])
+
+  @@index([walksBoardIdx])
+}
+
+model walksBoard {
+  id              Int           @id @default(autoincrement())
+  userIdx         Int
+  title           String        @db.VarChar(1000)
+  description     String
+  location        String
+  places          String
+  meetingDatetime DateTime
+  thumbnail       String
+  fileUrl         boardMedia[]
+  user            User          @relation(fields: [userIdx], references: [id])
+}

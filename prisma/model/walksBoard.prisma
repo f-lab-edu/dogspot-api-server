@@ -1,0 +1,12 @@
+model walksBoard {
+  id              Int           @id @default(autoincrement())
+  userIdx         Int
+  title           String        @db.VarChar(1000)
+  description     String
+  location        String
+  places          String
+  meetingDatetime DateTime
+  thumbnail       String
+  fileUrl         boardMedia[]
+  user            User          @relation(fields: [userIdx], references: [id])
+}
