@@ -43,10 +43,9 @@ export class createBoardDto {
   places: string;
 
   @ApiProperty({
-    description: '지도 위치',
-    default: '실제 지도 위치.',
+    description: '산책 시간',
+    default: '2023-06-13T00:00:00.000Z',
   })
-  @IsString()
   @IsNotEmpty()
   meetingDatetime: Date;
 
@@ -61,8 +60,8 @@ export class createBoardDto {
       '미디어(사진, 영상)가 있으면 미디어 처리 서버에 먼저 보내고, DB에 저장될 데이터 리턴 받아 넣어줘야 합니다.',
     default: [
       {
-        category: 'img',
-        path: 'https://reptimate.s3.ap-northeast-2.amazonaws.com/board/20230629233511-42b37a7f-20d1-43f3-8615-9cb01e8ac99d-N1.jpeg',
+        type: 'img',
+        url: 'https://dogspot.s3.ap-northeast-2.amazonaws.com/board/20230629233511-42b37a7f-20d1-43f3-8615-9cb01e8ac99d-N1.jpeg',
       },
     ],
   })

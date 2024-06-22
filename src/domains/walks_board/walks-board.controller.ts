@@ -1,18 +1,12 @@
-import {
-  Body,
-  Controller,
-  Post,
-  Res,
-} from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiCreatedResponseTemplate } from 'src/core/swagger/api-created-response';
 import { SwaggerTag } from 'src/core/swagger/swagger-tag';
 import { createBoardDto } from './dtos/create-board.dto';
-import UseAuthGuards from '../auth/auth-guards/use-auth';
 import { BoardService } from './walks-board.service';
 
 @ApiTags(SwaggerTag.BOARD)
-@Controller('/board')
+@Controller('/walksBoard')
 export class Boardcontroller {
   constructor(private readonly boardService: BoardService) {}
 
@@ -23,7 +17,7 @@ export class Boardcontroller {
   @ApiCreatedResponseTemplate({ type: createBoardDto })
   @ApiBody({ type: createBoardDto })
   // @UseAuthGuards()
-  @Post('/')
+  @Post('/walksBoard')
   async createBoard(
     @Res() res,
     @Body() dto: createBoardDto,

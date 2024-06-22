@@ -7,7 +7,7 @@ export class boardMedia {
     default: 1,
   })
   walksBoardIdx: number;
- 
+
   @ApiProperty({
     description: '미디어 종류:',
     default: '이미지 or 영상',
@@ -27,5 +27,4 @@ export class boardMedia {
     default: '저장된 파일 위치입니다. 기본 env.baseUrl + /폴더 디렉토리입니다.',
   })
   url: string;
-
 }
