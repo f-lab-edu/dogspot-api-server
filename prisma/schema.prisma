@@ -14,7 +14,7 @@ datasource db {
 }
 
 model User {
-  id                  Int       @id @default(autoincrement())
+  idx                  Int      @id @default(autoincrement())
   email               String    @unique
   nickname            String
   profilePath         String?
@@ -25,31 +25,27 @@ model User {
   created_at         DateTime @default(now())
   updated_at         DateTime @updatedAt
   deleted_at         DateTime
-
-  walksBoards         walksBoard[]
 }
 
 
 model boardMedia {
-  id             Int       @id @default(autoincrement())
-  walksBoardIdx  Int
+  idx             Int       @id @default(autoincrement())
+  walks_board_idx  Int
   type           String
-  thumbnail      String
+  thumbnail      String? 
   url            String
-  walksBoard     walksBoard @relation(fields: [walksBoardIdx], references: [id])
+  sequence        Int
 
-  @@index([walksBoardIdx])
+  @@index([walks_board_idx])
 }
 
 model walksBoard {
-  id              Int           @id @default(autoincrement())
-  userIdx         Int
+  idx             Int           @id @default(autoincrement())
+  user_idx         Int
   title           String        @db.VarChar(1000)
   description     String
   location        String
   places          String
   meetingDatetime DateTime
   thumbnail       String
-  fileUrl         boardMedia[]
-  user            User          @relation(fields: [userIdx], references: [id])
 }
