@@ -12,13 +12,15 @@
     "start:dev": "cross-env NODE_ENV=dev nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "NODE_ENV=prod node dist/main.js",
+    "pm2:deploy": "npm run build && pm2 start dist/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:model": "npx prisma generate"
+    "prisma:model": "npx prisma generate",
+    "prisma:init": "npx dotenv -e .env.dev -- prisma migrate dev --name init"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
