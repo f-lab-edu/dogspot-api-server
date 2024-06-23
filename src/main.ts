@@ -5,7 +5,6 @@ import { initSwagger } from './core/swagger/swagger-config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('api'); // '/api' 대신 'api'를 설정합니다.
   // api 버전 추가
   app.enableVersioning({
     type: VersioningType.URI,
