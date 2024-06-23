@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { createBoardDto } from '../dtos/create-board.dto';
 import { PrismaClient } from '@prisma/client';
+
+import { createBoardDto } from '../dtos/create-board.dto';
 
 @Injectable()
 export class BoardRepository {
@@ -14,8 +15,8 @@ export class BoardRepository {
     dto.userIdx = userIdx;
     try {
       // Prisma를 사용하여 walksBoard 생성 및 boardMedia 생성을 트랜잭션으로 묶음
-      const result = await this.prisma.$transaction(async (prisma) => {
-        const createdBoard = await prisma.walksBoard.create({
+      await this.prisma.$transaction(async (prisma) => {
+        const createdBoard = await prisma.walks_board.create({
           data: {
             user_idx: dto.userIdx,
             title: dto.title,
@@ -29,7 +30,7 @@ export class BoardRepository {
         console.log(createdBoard);
 
         const boardMediaPromises = dto.fileUrl.map((item, i) =>
-          prisma.boardMedia.create({
+          prisma.board_media.create({
             data: {
               walks_board_idx: createdBoard.idx,
               type: item.type,
