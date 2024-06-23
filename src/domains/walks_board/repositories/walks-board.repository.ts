@@ -28,7 +28,6 @@ export class BoardRepository {
             thumbnail: dto.thumbnail,
           },
         });
-        console.log(createdBoard);
 
         const boardMediaPromises = dto.fileUrl.map((item, i) =>
           prisma.board_media.create({
