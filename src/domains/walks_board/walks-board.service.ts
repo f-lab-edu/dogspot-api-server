@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { createBoardDto } from './dtos/create-board.dto';
 import { BoardRepository } from './repositories/walks-board.repository';
 

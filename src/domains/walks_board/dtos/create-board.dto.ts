@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
+
 import { boardMedia } from './board-media.dto'; // boardMedia를 직접 import합니다.
 
 export class createBoardDto {
