@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiCreatedResponseTemplate } from 'src/core/swagger/api-created-response';
@@ -8,6 +8,10 @@ import { BoardService } from './walks-board.service';
 import UseAuthGuards from '../auth/auth-guards/use-auth';
 import AuthUser from '../auth/decorators/auth-user.decorator';
 import { User } from '../auth/dtos/user.dto';
+import { ApiOkPaginationResponseTemplate } from 'src/core/swagger/api-ok-pagination-response';
+import { ApiOkResponseTemplate } from 'src/core/swagger/api-ok-response';
+import { boardDto } from './dtos/board.dto';
+import { PageRequest } from 'src/core/page';
 
 @ApiTags(SwaggerTag.BOARD)
 @Controller('/walksBoard')
@@ -28,9 +32,43 @@ export class Boardcontroller {
     @Body() dto: createBoardDto,
     @AuthUser() user: User,
   ) {
-    const result = await this.boardService.createBoard(dto, user.userIdx);
+    console.log(user);
+    const result = await this.boardService.createBoard(dto, user.idx);
     return res.status(200).send({
       result: result,
+    });
+  }
+
+  @ApiOperation({
+    summary: '산책 게시글 조회',
+    description: '산책 게시글을 20개씩 최신 정보를 조회합니다.',
+  })
+  @ApiOkPaginationResponseTemplate({ type: boardDto })
+  @Get('/walksBoard')
+  async getBoard(@Res() res, @Query() pageRequest: PageRequest) {
+    console.log(
+      'pageRequest instanceof PageRequest:',
+      pageRequest instanceof PageRequest,
+    );
+    const boards = await this.boardService.getBoardList(pageRequest);
+    return res.status(200).send({
+      boards: boards,
+    });
+  }
+
+  @ApiOperation({
+    summary: '게시판 상세조회',
+    description: '게시판을 상세 조회 기능입니다.',
+  })
+  @ApiOkResponseTemplate({ type: boardDto })
+  @Get('/:warlsBoardIdx')
+  async findWalksBoard(
+    @Res() res,
+    @Param('warlsBoardIdx') warlsBoardIdx: number,
+  ) {
+    const board = await this.boardService.findWalksBoard(warlsBoardIdx);
+    return res.status(200).send({
+      board: board,
     });
   }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
 
 import { createBoardDto } from '../dtos/create-board.dto';
+import { PageRequest } from 'src/core/page';
 
 @Injectable()
 export class BoardRepository {
@@ -47,6 +48,36 @@ export class BoardRepository {
     } catch (error) {
       console.log('error: ', error);
       throw new Error(`Failed to create board: ${error.message}`);
+    }
+  }
+  async getBoardList(pageRequest: PageRequest) {
+    try {
+      const boards = await this.prisma.walks_board.findMany({
+        skip: pageRequest.offset, // 건너뛸 개수 설정
+        take: pageRequest.limit, // 가져올 개수 설정
+        orderBy: { created_at: pageRequest.order === 'ASC' ? 'asc' : 'desc' }, // 정렬 방식 설정
+      });
+      return boards; // 조회된 walks_board 리스트 반환
+    } catch (error) {
+      console.error('Failed to fetch board list:', error);
+      throw new Error(`Failed to fetch board list: ${error.message}`);
+    }
+  }
+  async getBoard(warlsBoardIdx: number) {
+    try {
+      const board = await this.prisma.walks_board.findUnique({
+        where: {
+          idx: warlsBoardIdx,
+        },
+      });
+
+      if (!board) {
+        throw new Error(`게시글을 찾을 수 없습니다: ${warlsBoardIdx}`);
+      }
+      return board; // 조회된 walks_board 리스트 반환
+    } catch (error) {
+      console.error('Failed to fetch board list:', error);
+      throw new Error(`Failed to fetch board list: ${error.message}`);
     }
   }
 }

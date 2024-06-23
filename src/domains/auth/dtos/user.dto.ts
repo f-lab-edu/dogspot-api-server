@@ -8,6 +8,12 @@ export class User {
     description: '유저 번호',
     default: 1,
   })
+  idx: number;
+
+  @ApiProperty({
+    description: '유저 번호',
+    default: 1,
+  })
   userIdx: number;
 
   @ApiProperty({
