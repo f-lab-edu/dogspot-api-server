@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpException, Param, Post, Query, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { ApiCreatedResponseTemplate } from 'src/core/swagger/api-created-response';
@@ -33,6 +33,7 @@ export class Boardcontroller {
     @AuthUser() user: User,
   ) {
     console.log(user);
+    throw new HttpException('에러 테스트', 500);
     const result = await this.boardService.createBoard(dto, user.idx);
     return res.status(200).send({
       result: result,
