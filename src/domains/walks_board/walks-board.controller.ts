@@ -32,12 +32,19 @@ export class Boardcontroller {
     @Body() dto: createBoardDto,
     @AuthUser() user: User,
   ) {
-    console.log(user);
-    throw new HttpException('에러 테스트', 500);
-    const result = await this.boardService.createBoard(dto, user.idx);
-    return res.status(200).send({
-      result: result,
-    });
+    try {
+      console.log(user);
+      throw new HttpException('에러 테스트', 500);
+      const result = await this.boardService.createBoard(dto, user.idx);
+      return res.status(200).send({
+        result: result,
+      });
+    } catch (error) {
+      // res.status(500).send({
+      //   message: error.message,
+      // });
+      throw error;
+    }
   }
 
   @ApiOperation({

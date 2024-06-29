@@ -6,13 +6,18 @@ import * as winstonDaily from 'winston-daily-rotate-file';
 import * as winston from 'winston';
 
 const isProduction = process.env['NODE_ENV'] === 'production';
-const logDir = __dirname + '/../../logs';
+const logDir = `logs`;
 
 const dailyOptions = (level: string) => {
+  let dirname = logDir;
+  if (level === 'error') {
+    dirname += '/error';
+  }
+
   return {
     level,
     datePattern: 'YYYY-MM-DD',
-    dirname: logDir + `/${level}`,
+    dirname,
     filename: `%DATE%.${level}.log`,
     zippedArchive: true,
     maxSize: '20m',
