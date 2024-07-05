@@ -49,12 +49,25 @@ model walks_board {
   description     String
   location        String
   places          String
-  meetingDatetime DateTime
+  meeting_datetime DateTime
+  max_participants Int
   thumbnail       String
   created_at         DateTime @default(now())
   updated_at         DateTime? @updatedAt
   deleted_at         DateTime?
 }
+
+model walks_participants {
+  idx             Int       @id @default(autoincrement())
+  walks_board_idx  Int
+  user_idx  Int
+  created_at         DateTime @default(now())
+  updated_at         DateTime? @updatedAt
+  deleted_at         DateTime?
+
+  @@index([walks_board_idx])
+}
+
 
 model ref_token {
   idx             Int           @id @default(autoincrement())

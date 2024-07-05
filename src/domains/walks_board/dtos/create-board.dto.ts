@@ -5,7 +5,7 @@ import { boardMedia } from './board-media.dto'; // boardMedia를 직접 import�
 
 export class createBoardDto {
   @ApiProperty({
-    description: '유저 번호',
+    description: '게시글 번호',
     default: 1,
   })
   userIdx: number;
@@ -49,6 +49,14 @@ export class createBoardDto {
   })
   @IsNotEmpty()
   meetingDatetime: Date;
+
+
+  @ApiProperty({
+    description: '최대 참여자 수',
+    default: '8',
+  })
+  @IsNotEmpty()
+  maxParticipants: number;
 
   @ApiProperty({
     description: '썸네일',

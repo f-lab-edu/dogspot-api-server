@@ -4,6 +4,7 @@ import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ApiCreatedResponseTemplate } from 'src/core/swagger/api-created-response';
 import { SwaggerTag } from 'src/core/swagger/swagger-tag';
 import { createBoardDto } from './dtos/create-board.dto';
+import { boardJoinDto } from './dtos/board-join';
 import { BoardService } from './walks-board.service';
 import UseAuthGuards from '../auth/auth-guards/use-auth';
 import AuthUser from '../auth/decorators/auth-user.decorator';
@@ -11,7 +12,7 @@ import { User } from '../auth/dtos/user.dto';
 import { ApiOkPaginationResponseTemplate } from 'src/core/swagger/api-ok-pagination-response';
 import { ApiOkResponseTemplate } from 'src/core/swagger/api-ok-response';
 import { boardDto } from './dtos/board.dto';
-import { PageRequest } from 'src/core/page';
+import { PageRequest } from '../../core/page';
 
 @ApiTags(SwaggerTag.BOARD)
 @Controller('/walksBoard')
@@ -73,5 +74,29 @@ export class Boardcontroller {
     return res.status(200).send({
       board: board,
     });
+  }
+
+  @ApiOperation({
+    summary: '산책 참여',
+    description:
+      '산책 참여 합니다. 등록 시, jwt토큰이 필요합니다. jwt 토큰은 dogspot.site/auth/api-docs 접속 후 Auth: 인증 -> /auth 사용하시면 얻을 수 있습니다.',
+  })
+  @ApiCreatedResponseTemplate({ type: boardJoinDto })
+  @ApiBody({ type: boardJoinDto })
+  @UseAuthGuards()
+  @Post('/walksBoard/join')
+  async walksJoin(
+    @Res() res,
+    @Body() dto: boardJoinDto,
+    @AuthUser() user: User,
+  ) {
+    try {
+      const result = await this.boardService.walksJoin(dto);
+      return res.status(200).send({
+        result: result,
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 }

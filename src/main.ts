@@ -9,10 +9,12 @@ async function bootstrap() {
     bufferLogs: true,
     logger: WinstonLogger, // replacing logger
   });
+  
   // api 버전 추가
   app.enableVersioning({
     type: VersioningType.URI,
   });
+  await app.startAllMicroservices();
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   // 스웨거 시작
   initSwagger(app);

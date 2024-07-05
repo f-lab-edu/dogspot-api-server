@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 
 import { createBoardDto } from '../dtos/create-board.dto';
 import { PageRequest } from 'src/core/page';
+import { boardJoinDto } from '../dtos/board-join';
 
 @Injectable()
 export class BoardRepository {
@@ -24,7 +25,8 @@ export class BoardRepository {
             description: dto.description,
             location: dto.location,
             places: dto.places,
-            meetingDatetime: dto.meetingDatetime,
+            max_participants: dto.maxParticipants,
+            meeting_datetime: dto.meetingDatetime,
             thumbnail: dto.thumbnail,
           },
         });
@@ -78,5 +80,30 @@ export class BoardRepository {
       console.error('Failed to fetch board list:', error);
       throw new Error(`Failed to fetch board list: ${error.message}`);
     }
+  }
+  async createWalkJoin (dto: boardJoinDto){
+    try {
+      // Prisma를 사용하여 walksBoard 생성 및 boardMedia 생성을 트랜잭션으로 묶음
+        await this.prisma.walks_participants.create({
+          data: {
+            walks_board_idx: dto.idx,
+            user_idx: dto.userIdx,
+          },
+        });
+
+        return true;
+    } catch (error) {
+      console.log('error: ', error);
+      throw new Error(`Failed to create board: ${error.message}`);
+    }
+  }
+  async getWalkJoinMember (warlsBoardIdx: number){
+    const result = await this.prisma.walks_participants.findMany({
+      where: {
+        walks_board_idx: warlsBoardIdx,
+      },
+    });
+
+    return result;
   }
 }

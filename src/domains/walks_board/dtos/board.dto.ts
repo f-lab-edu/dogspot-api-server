@@ -5,7 +5,7 @@ import { boardMedia } from './board-media.dto'; // boardMedia를 직접 import�
 
 export class boardDto {
   @ApiProperty({
-    description: '유저 번호',
+    description: '게시글 번호',
     default: 1,
   })
   idx: number;
