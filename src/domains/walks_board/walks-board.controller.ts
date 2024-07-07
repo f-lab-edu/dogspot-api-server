@@ -1,5 +1,6 @@
 import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { StatusCodes } from 'http-status-codes';
 
 import { ApiCreatedResponseTemplate } from 'src/core/swagger/api-created-response';
 import { SwaggerTag } from 'src/core/swagger/swagger-tag';
@@ -35,7 +36,7 @@ export class Boardcontroller {
   ) {
     try {
       const result = await this.boardService.createBoard(dto, user.idx);
-      return res.status(200).send({
+      return res.status(StatusCodes.CREATED).send({
         result: result,
       });
     } catch (error) {
@@ -50,12 +51,8 @@ export class Boardcontroller {
   @ApiOkPaginationResponseTemplate({ type: boardDto })
   @Get('/walksBoard')
   async getBoard(@Res() res, @Query() pageRequest: PageRequest) {
-    console.log(
-      'pageRequest instanceof PageRequest:',
-      pageRequest instanceof PageRequest,
-    );
     const boards = await this.boardService.getBoardList(pageRequest);
-    return res.status(200).send({
+    return res.status(StatusCodes.OK).send({
       boards: boards,
     });
   }
@@ -70,10 +67,16 @@ export class Boardcontroller {
     @Res() res,
     @Param('warlsBoardIdx') warlsBoardIdx: number,
   ) {
-    const board = await this.boardService.findWalksBoard(warlsBoardIdx);
-    return res.status(200).send({
-      board: board,
-    });
+    try {
+      const board = await this.boardService.findWalksBoard(warlsBoardIdx);
+      return res.status(StatusCodes.OK).send({
+        board: board,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        error: error.message,
+      });
+    }
   }
 
   @ApiOperation({
@@ -85,14 +88,21 @@ export class Boardcontroller {
   @ApiBody({ type: boardJoinDto })
   @UseAuthGuards()
   @Post('/walksBoard/join')
-  async walksJoin(@Res() res, @Body() dto: boardJoinDto) {
+  async walksJoin(
+    @Res() res,
+    @Body() dto: boardJoinDto,
+    @AuthUser() user: User,
+  ) {
     try {
-      const result = await this.boardService.walksJoin(dto);
-      return res.status(200).send({
+      const result = await this.boardService.walksJoin(dto, user);
+      return res.status(StatusCodes.CREATED).send({
         result: result,
       });
     } catch (error) {
-      throw error;
+      console.log('error: ', error);
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        result: error.message,
+      });
     }
   }
 }

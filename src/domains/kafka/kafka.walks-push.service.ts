@@ -14,8 +14,6 @@ export class KafkaService implements OnModuleInit {
   }
   async sendMessage(topic: string, message: any) {
     const result = await this.kafkaClient.send(topic, message);
-    console.log('result: ', result);
-
     return result;
   }
 }

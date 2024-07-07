@@ -25,6 +25,9 @@ model user {
   created_at         DateTime @default(now())
   updated_at         DateTime? @updatedAt
   deleted_at         DateTime?
+
+   walks_participants walks_participants[]  // Add this line to establish the relation
+   walks_boards         walks_board[]
 }
 
 
@@ -55,6 +58,10 @@ model walks_board {
   created_at         DateTime @default(now())
   updated_at         DateTime? @updatedAt
   deleted_at         DateTime?
+
+   user              user          @relation(fields: [user_idx], references: [idx]) // 추가된 사용자와의 관계 설정
+   participants    walks_participants[] // walks_participants와의 관계 설정
+
 }
 
 model walks_participants {
@@ -64,6 +71,9 @@ model walks_participants {
   created_at         DateTime @default(now())
   updated_at         DateTime? @updatedAt
   deleted_at         DateTime?
+
+  user user @relation(fields: [user_idx], references: [idx])  // Add this line to establish the relation
+  walks_board      walks_board  @relation(fields: [walks_board_idx], references: [idx])
 
   @@index([walks_board_idx])
 }

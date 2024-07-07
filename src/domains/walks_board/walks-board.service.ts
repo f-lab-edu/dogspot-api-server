@@ -6,6 +6,7 @@ import { BoardRepository } from './repositories/walks-board.repository';
 import { PageRequest } from '../../core/page';
 import { KafkaService } from '../kafka/kafka.walks-push.service';
 import { Topic } from '../kafka/helpers/constants';
+import { User } from '../auth/dtos/user.dto';
 
 @Injectable()
 export class BoardService {
@@ -25,25 +26,32 @@ export class BoardService {
   }
 
   async findWalksBoard(warlsBoardIdx: number) {
-    const board = await this.boardRepository.getBoard(warlsBoardIdx);
-    return board;
+    try {
+      const board = await this.boardRepository.getBoard(warlsBoardIdx);
+      if (!board) {
+        throw new Error(`Board not found.`);
+      }
+      return board;
+    } catch (error) {
+      throw new Error(`Failed to findWalksBoard: ${error.message}`);
+    }
   }
 
-  async walksJoin(dto: boardJoinDto) {
+  async walksJoin(dto: boardJoinDto, user: User) {
     const board = await this.boardRepository.getBoard(dto.idx);
+    await this.boardRepository.canParticipate(dto, board);
     await this.boardRepository.createWalkJoin(dto);
-    const joinMembers = await this.boardRepository.getWalkJoinMember(board.idx);
+    const message = await this.boardRepository.getWalkJoinMember(board, user);
     const result = await this.kafkaService.sendMessage(
       Topic.WALKS_PUSH,
-      joinMembers,
+      message,
     );
     result.subscribe({
       next: (data) => console.log('Received data:', data),
       error: (error) => console.error('Error:', error),
       complete: () => console.log('Complete'),
     });
-    // console.log('result: ', result);
 
-    return result;
+    return message;
   }
 }
