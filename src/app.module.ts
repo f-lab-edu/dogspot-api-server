@@ -11,12 +11,11 @@ import { AuthModule } from './domains/auth/auth.module';
 import { LoggerContextMiddleware } from './core/middleware/LoggerContextMiddleware';
 import { AllExceptionsFilter } from './core/middleware/ExceptionsHandler';
 
-
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: process.env.NODE_ENV === 'dev' ? '.env.dev' : '.env.prod',
+      envFilePath: process.env.NODE_ENV === 'dev' ? 'dev.env' : 'prod.env',
     }),
     walksBoardModule,
     AuthModule,

@@ -4,7 +4,9 @@ import { Topic } from './helpers/constants';
 
 @Injectable()
 export class KafkaService implements OnModuleInit {
-  constructor(@Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka) {}
+  constructor(
+    @Inject('KAFKA_SERVICE') private readonly kafkaClient: ClientKafka,
+  ) {}
 
   async onModuleInit() {
     this.kafkaClient.subscribeToResponseOf(Topic.WALKS_PUSH);
@@ -13,7 +15,7 @@ export class KafkaService implements OnModuleInit {
   async sendMessage(topic: string, message: any) {
     const result = await this.kafkaClient.send(topic, message);
     console.log('result: ', result);
-    
+
     return result;
   }
 }

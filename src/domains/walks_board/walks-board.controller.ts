@@ -85,11 +85,7 @@ export class Boardcontroller {
   @ApiBody({ type: boardJoinDto })
   @UseAuthGuards()
   @Post('/walksBoard/join')
-  async walksJoin(
-    @Res() res,
-    @Body() dto: boardJoinDto,
-    @AuthUser() user: User,
-  ) {
+  async walksJoin(@Res() res, @Body() dto: boardJoinDto) {
     try {
       const result = await this.boardService.walksJoin(dto);
       return res.status(200).send({
