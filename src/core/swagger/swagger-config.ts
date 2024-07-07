@@ -13,7 +13,7 @@ export const swaggerConfig = new DocumentBuilder()
   .setTitle('Dog Spot API SERVER')
   .setDescription('Swagger API description') //todo: api-readme 작성하기
   .setVersion('1.0')
-  // .addServer('https://dogspot.site/api')
+  .addServer('https://dogspot.site/api')
   .addBearerAuth(
     {
       type: 'http',
@@ -26,7 +26,6 @@ export const swaggerConfig = new DocumentBuilder()
   .build();
 
 export const initSwagger = async (app: INestApplication) => {
-  console.log('swaggerConfig: ', swaggerConfig);
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
   SwaggerModule.setup('api-docs', app, swaggerDocument, swaggerOptions);
 };
