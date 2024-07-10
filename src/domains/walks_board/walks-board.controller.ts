@@ -3,7 +3,7 @@ import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { StatusCodes } from 'http-status-codes';
 
 import { ApiCreatedResponseTemplate } from 'src/core/swagger/api-created-response';
-import { SwaggerTag } from 'src/core/swagger/swagger-tag';
+import { SwaggerTag } from '../../core/swagger/swagger-tag';
 import { createBoardDto } from './dtos/create-board.dto';
 import { boardJoinDto } from './dtos/board-join';
 import { BoardService } from './walks-board.service';
@@ -99,7 +99,6 @@ export class Boardcontroller {
         result: result,
       });
     } catch (error) {
-      console.log('error: ', error);
       return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
         result: error.message,
       });

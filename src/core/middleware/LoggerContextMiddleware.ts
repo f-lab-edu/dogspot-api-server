@@ -1,7 +1,7 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { NextFunction, Request, Response } from 'express';
-// import { WinstonLogger } from '../../utils/logger/logger'; // logger.ts 파일을 import합니다.
+import { WinstonLogger } from '../../utils/logger/logger'; // logger.ts 파일을 import합니다.
 
 @Injectable()
 export class LoggerContextMiddleware implements NestMiddleware {
@@ -17,7 +17,7 @@ export class LoggerContextMiddleware implements NestMiddleware {
     const datetime = new Date();
     res.on('finish', () => {
       const { statusCode } = res;
-      console.log(
+      WinstonLogger.log(
         `${datetime} USER-${userId} METHOD-${method} ORINALURL-${originalUrl} STATUSCODE-${statusCode} IP-${ip} ${userAgent}`,
       );
     });

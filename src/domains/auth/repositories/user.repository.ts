@@ -18,7 +18,6 @@ export class UserRepository {
       });
       return user;
     } catch (error) {
-      console.log('error: ', error);
       throw new Error(`Failed to find user by idx: ${error.message}`);
     }
   }

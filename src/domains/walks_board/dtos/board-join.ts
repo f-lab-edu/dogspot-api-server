@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { User } from 'src/domains/auth/dtos/user.dto';
 
 export class boardJoinDto {
   @ApiProperty({
@@ -8,8 +9,8 @@ export class boardJoinDto {
   idx: number;
 
   @ApiProperty({
-    description: '유저 번호',
+    description: '유저 Dto',
     default: 1,
   })
-  userIdx: number;
+  userDto: User;
 }
