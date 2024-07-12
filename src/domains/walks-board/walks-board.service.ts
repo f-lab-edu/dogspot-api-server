@@ -40,10 +40,6 @@ export class BoardService {
   async walksJoin(dto: boardJoinDto, user: User) {
     try {
       dto.userDto = user;
-      // const board = await this.boardRepository.getBoard(dto.idx);
-      // await this.boardRepository.canParticipate(dto, board);
-      // await this.boardRepository.createWalkJoin(dto, user);
-      // const message = await this.boardRepository.getWalkJoinMember(board, user);
       await this.kafkaService.sendMessage(
         Topic.WALKS,
         dto,

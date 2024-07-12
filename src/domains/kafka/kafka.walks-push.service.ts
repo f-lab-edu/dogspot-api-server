@@ -1,5 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { Kafka, Producer, Consumer } from 'kafkajs';
+import { Kafka, Producer, Consumer, Partitioners } from 'kafkajs';
 import { ConfigService } from '@nestjs/config';
 import { Topic } from './helpers/constants';
 
@@ -10,11 +10,16 @@ export class KafkaService implements OnModuleInit, OnModuleDestroy {
   private consumer: Consumer;
 
   constructor(private readonly configService: ConfigService) {
-    const brokers = [process.env.KAFKA_URL];
-    const groupId = process.env.KAFKA_GROUP_ID;
+    const brokers = [this.configService.get<string>('KAFKA_URL')];
+    const groupId = this.configService.get<string>('KAFKA_GROUP_ID');
+    console.log('groupId: ', groupId);
+    
+    if (!groupId) {
+      throw new Error('KAFKA_GROUP_ID is not defined in environment variables.');
+    }
 
     this.kafka = new Kafka({ brokers });
-    this.producer = this.kafka.producer();
+    this.producer = this.kafka.producer({ createPartitioner: Partitioners.LegacyPartitioner }); // Use LegacyPartitioner
     this.consumer = this.kafka.consumer({ groupId });
   }
 

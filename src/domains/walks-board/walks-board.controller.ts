@@ -2,16 +2,16 @@ import { Body, Controller, Get, Param, Post, Query, Res } from '@nestjs/common';
 import { ApiBody, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { StatusCodes } from 'http-status-codes';
 
-import { ApiCreatedResponseTemplate } from 'src/core/swagger/api-created-response';
-import { SwaggerTag } from '../../core/swagger/swagger-tag';
 import { createBoardDto } from './dtos/create-board.dto';
 import { boardJoinDto } from './dtos/board-join';
 import { BoardService } from './walks-board.service';
 import UseAuthGuards from '../auth/auth-guards/use-auth';
 import AuthUser from '../auth/decorators/auth-user.decorator';
 import { User } from '../auth/dtos/user.dto';
-import { ApiOkPaginationResponseTemplate } from 'src/core/swagger/api-ok-pagination-response';
-import { ApiOkResponseTemplate } from 'src/core/swagger/api-ok-response';
+import { SwaggerTag } from '../../core/swagger/swagger-tag';
+import { ApiOkPaginationResponseTemplate } from '../../core/swagger/api-ok-pagination-response';
+import { ApiCreatedResponseTemplate } from '../../core/swagger/api-created-response';
+import { ApiOkResponseTemplate } from '../../core/swagger/api-ok-response';
 import { boardDto } from './dtos/board.dto';
 import { PageRequest } from '../../core/page';
 
