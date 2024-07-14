@@ -1,8 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { PrismaClient, walks_board } from '@prisma/client';
 
 import { createBoardDto } from '../dtos/create-board.dto';
-import { PageRequest } from 'src/core/page';
+import { PageRequest } from '../../../core/page';
+import { SaveFileDto } from '../../file/dtos/save.file.dto';
+import { HttpErrorConstants } from '../../../core/http/http-error-objects';
+import { WinstonLogger } from '../../../utils/logger/logger';
 
 @Injectable()
 export class BoardRepository {
@@ -12,41 +15,50 @@ export class BoardRepository {
     this.prisma = new PrismaClient();
   }
 
-  async createBoard(dto: createBoardDto, userIdx: number) {
+  async createBoard(
+    dto: createBoardDto,
+    userIdx: number,
+    savedFiles: SaveFileDto[],
+  ): Promise<walks_board> {
     dto.userIdx = userIdx;
     try {
       // Prisma를 사용하여 walksBoard 생성 및 boardMedia 생성을 트랜잭션으로 묶음
-      await this.prisma.$transaction(async (prisma) => {
-        const createdBoard = await prisma.walks_board.create({
+      const createdBoard = await this.prisma.$transaction(async (prisma) => {
+        const board = await prisma.walks_board.create({
           data: {
             user_idx: dto.userIdx,
             title: dto.title,
             description: dto.description,
             location: dto.location,
             places: dto.places,
-            max_participants: dto.maxParticipants,
+            max_participants:
+              process.env.MODE === 'dev' ? 8 : dto.maxParticipants,
             meeting_datetime: dto.meetingDatetime,
             thumbnail: dto.thumbnail,
           },
         });
 
-        const boardMediaPromises = dto.fileUrl.map((item, i) =>
-          prisma.board_media.create({
+        // board_media 엔티티를 생성하는 비동기 작업을 순차적으로 실행
+        for (let i = 0; i < savedFiles.length; i++) {
+          const item = savedFiles[i];
+          await this.prisma.board_media.create({
             data: {
-              walks_board_idx: createdBoard.idx,
+              walks_board_idx: board.idx,
               type: item.type,
-              thumbnail: null, // 나중에 리사이즈 이미지가 필요할 때 사용하려고 만들었습니다.
-              url: item.url,
+              thumbnail_url: null, // 나중에 리사이즈 이미지가 필요할 때 사용하려고 만들었습니다.
+              original_file_url: item.path,
               sequence: i,
             },
-          }),
-        );
-
-        await Promise.all(boardMediaPromises);
-        return true;
+          });
+        }
+        return board;
       });
+      return createdBoard;
     } catch (error) {
-      throw new Error(`Failed to create board: ${error.message}`);
+      WinstonLogger.error(`Failed at BoardRepository -> createBoard: ${error}`);
+      throw new InternalServerErrorException(
+        HttpErrorConstants.INTERNAL_BOARD_ERROR,
+      );
     }
   }
   async getBoardList(pageRequest: PageRequest): Promise<walks_board[]> {

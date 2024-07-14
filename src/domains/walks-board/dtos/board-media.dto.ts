@@ -21,11 +21,11 @@ export class boardMedia {
     description: '썸네일',
     default: '이미지 썸네일입니다.',
   })
-  thumbnail: string;
+  thumbnail_url: string;
 
   @ApiProperty({
     description: 'url',
     default: '저장된 파일 위치입니다. 기본 env.baseUrl + /폴더 디렉토리입니다.',
   })
-  url: string;
+  original_file_url: string;
 }

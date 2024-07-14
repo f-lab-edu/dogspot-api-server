@@ -1,8 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsString, MaxLength } from 'class-validator';
 
-import { boardMedia } from './board-media.dto'; // boardMedia를 직접 import합니다.
-
 export class createBoardDto {
   @ApiProperty({
     description: '게시글 번호',
@@ -50,10 +48,10 @@ export class createBoardDto {
   @IsNotEmpty()
   meetingDatetime: Date;
 
-
   @ApiProperty({
     description: '최대 참여자 수',
-    default: '8',
+    default: 8,
+    type: 'integer',
   })
   @IsNotEmpty()
   maxParticipants: number;
@@ -65,14 +63,11 @@ export class createBoardDto {
   thumbnail: string;
 
   @ApiProperty({
-    description:
-      '미디어(사진, 영상)가 있으면 미디어 처리 서버에 먼저 보내고, DB에 저장될 데이터 리턴 받아 넣어줘야 합니다.',
-    default: [
-      {
-        type: 'img',
-        url: 'https://dogspot.s3.ap-northeast-2.amazonaws.com/board/20230629233511-42b37a7f-20d1-43f3-8615-9cb01e8ac99d-N1.jpeg',
-      },
-    ],
+    type: 'array',
+    items: {
+      type: 'string',
+      format: 'binary',
+    },
   })
-  fileUrl: boardMedia[]; // boardMedia를 직접 사용합니다.
+  files: any;
 }

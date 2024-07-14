@@ -21,12 +21,7 @@ describe('BoardController (walksBoard)', () => {
         }),
       ],
       controllers: [Boardcontroller],
-      providers: [
-        BoardService,
-        KafkaService,
-        ConfigService,
-        BoardRepository,
-      ],
+      providers: [BoardService, KafkaService, ConfigService, BoardRepository],
     }).compile();
 
     controller = module.get<Boardcontroller>(Boardcontroller);
@@ -43,12 +38,12 @@ describe('BoardController (walksBoard)', () => {
       limit: 20,
       offset: 0,
       existsNextPage: function (totalCount: number): boolean {
-        throw new Error('Function not implemented.');
-      }
+        throw new Error(`Function not implemented. ${totalCount}`);
+      },
     };
 
     const mockBoards = [
-      { 
+      {
         idx: 1,
         user_idx: 1,
         title: 'Board 1',
@@ -62,7 +57,7 @@ describe('BoardController (walksBoard)', () => {
         updated_at: new Date(),
         deleted_at: null,
       },
-      { 
+      {
         idx: 2,
         user_idx: 2,
         title: 'Board 2',
@@ -75,7 +70,7 @@ describe('BoardController (walksBoard)', () => {
         created_at: new Date(),
         updated_at: new Date(),
         deleted_at: null,
-      }
+      },
     ];
 
     jest.spyOn(boardService, 'getBoardList').mockResolvedValue(mockBoards);

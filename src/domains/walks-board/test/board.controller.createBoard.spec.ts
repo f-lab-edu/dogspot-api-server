@@ -45,14 +45,6 @@ describe('BoardController (walksBoard)', () => {
       meetingDatetime: new Date("2023-06-13T14:00:00.000Z"),
       maxParticipants: 8,
       thumbnail: "https://dogspot.s3.ap-northeast-2.amazonaws.com/board/20230629233511-42b37a7f-20d1-43f3-8615-9cb01e8ac99d-N1.jpeg",
-      fileUrl: [
-        {
-          type: "img",
-          url: "https://dogspot.s3.ap-northeast-2.amazonaws.com/board/20230629233511-42b37a7f-20d1-43f3-8615-9cb01e8ac99d-N1.jpeg",
-          walksBoardIdx: 0,
-          thumbnail: ''
-        }
-      ]
     };
     const mockUser: User = {
       idx: 1,
