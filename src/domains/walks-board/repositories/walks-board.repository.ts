@@ -31,8 +31,9 @@ export class BoardRepository {
             description: dto.description,
             location: dto.location,
             places: dto.places,
-            max_participants:
-              process.env.MODE === 'dev' ? 8 : dto.maxParticipants,
+            // max_participants:
+            //   process.env.MODE === 'dev' ? 8 : dto.maxParticipants,
+            max_participants: 8,
             meeting_datetime: dto.meetingDatetime,
             thumbnail: dto.thumbnail,
           },
