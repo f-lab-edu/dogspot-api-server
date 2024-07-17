@@ -1,0 +1,10 @@
+model boardMedia {
+  id             Int       @id @default(autoincrement())
+  walksBoardIdx  Int
+  type           String
+  thumbnail      String
+  url            String
+  walksBoard     walksBoard @relation(fields: [walksBoardIdx], references: [id])
+
+  @@index([walksBoardIdx])
+}
