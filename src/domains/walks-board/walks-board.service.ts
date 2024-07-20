@@ -11,6 +11,7 @@ import { WinstonLogger } from '../../utils/logger/logger';
 import { HttpErrorConstants } from '../../core/http/http-error-objects';
 import { FileService } from '../file/file.service';
 import { FilePath } from './helpers/constants';
+import { log } from 'console';
 
 @Injectable()
 export class BoardService {
@@ -27,22 +28,23 @@ export class BoardService {
   ) {
     try {
       let savedFiles = [];
-      // 파일 저장
-      if (files && files.length > 0) {
-        savedFiles = await this.fileService.saveFiles(
-          files,
-          FilePath.WALKS_BOARD_PATH,
-        );
-      }
       const createdBoard = await this.boardRepository.createBoard(
         dto,
         userIdx,
         savedFiles,
       );
-      await this.kafkaService.sendMessage(
-        Topic.WALKS_BOARD_CREATE,
-        createdBoard.idx,
-      );
+      // 파일 저장
+      if (files && files.length > 0) {
+        console.log('파일 있음!!!!!!!!!!!');
+        savedFiles = await this.fileService.saveFiles(
+          files,
+          FilePath.WALKS_BOARD_PATH,
+        );
+        await this.kafkaService.sendMessage(
+          Topic.WALKS_BOARD_CREATE,
+          createdBoard.idx,
+        );
+      }
       return createdBoard;
     } catch (error) {
       // 에러 로그
