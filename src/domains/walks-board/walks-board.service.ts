@@ -35,7 +35,6 @@ export class BoardService {
       );
       // 파일 저장
       if (files && files.length > 0) {
-        console.log('파일 있음!!!!!!!!!!!');
         savedFiles = await this.fileService.saveFiles(
           files,
           FilePath.WALKS_BOARD_PATH,
@@ -82,6 +81,19 @@ export class BoardService {
       dto.userDto = user;
       await this.kafkaService.sendMessage(Topic.WALKS, dto);
     } catch (error) {
+      throw new Error(`Failed to walksJoin: ${error.message}`);
+    }
+  }
+
+  async deleteWalks(warlsBoardIdx: number, user: User) {
+    try {
+      const board = await this.boardRepository.getBoardByIdxAndUserId(warlsBoardIdx, user);
+      if (!board) {
+        throw new Error(`Board not found.`);
+      }
+      await this.kafkaService.sendMessage(Topic.WALKS, board);
+    } catch (error) {
+      WinstonLogger.error(`Failed at BoardService -> deleteWalks: ${error}`);
       throw new Error(`Failed to walksJoin: ${error.message}`);
     }
   }

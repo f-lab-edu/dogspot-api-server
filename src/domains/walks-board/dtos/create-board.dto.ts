@@ -51,7 +51,7 @@ export class createBoardDto {
   @ApiProperty({
     description: '최대 참여자 수',
     default: 8,
-    type: 'integer',
+    type: 'number',
   })
   @IsNotEmpty()
   maxParticipants: number;

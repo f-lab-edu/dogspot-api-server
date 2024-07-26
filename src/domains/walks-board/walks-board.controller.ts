@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   InternalServerErrorException,
   Param,
@@ -46,14 +47,14 @@ export class Boardcontroller {
   @ApiBody({ type: createBoardDto })
   @UseAuthGuards()
   @UseInterceptors(
-    FilesInterceptor('files', 5, {
+    FilesInterceptor('files', 2, {
       fileFilter: fileFilter,
       limits: {
         fileSize: 10 * 1024 * 1024, // 10MB 제한 (바이트 단위)
       },
     }),
   )
-  @Post('/walksBoard')
+  @Post('/')
   async createBoard(
     @Res() res,
     @Body() dto: createBoardDto,
@@ -77,7 +78,7 @@ export class Boardcontroller {
     description: '산책 게시글을 20개씩 최신 정보를 조회합니다.',
   })
   @ApiOkPaginationResponseTemplate({ type: boardDto })
-  @Get('/walksBoard')
+  @Get('/')
   async getBoard(@Res() res, @Query() pageRequest: PageRequest) {
     const boards = await this.boardService.getBoardList(pageRequest);
     return res.status(StatusCodes.OK).send({
@@ -123,6 +124,31 @@ export class Boardcontroller {
   ) {
     try {
       const result = await this.boardService.walksJoin(dto, user);
+      return res.status(StatusCodes.CREATED).send({
+        result: result,
+      });
+    } catch (error) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
+        result: error.message,
+      });
+    }
+  }
+
+  @ApiOperation({
+    summary: '산책 게시글 삭제',
+    description:
+      '산책 게시글을 삭제합니다.',
+  })
+  @ApiBody({ type: boardJoinDto })
+  @UseAuthGuards()
+  @Delete('/:warlsBoardIdx')
+  async deleteWalks(
+    @Res() res,
+    @Param('warlsBoardIdx') warlsBoardIdx: number,
+    @AuthUser() user: User,
+  ) {
+    try {
+      const result = await this.boardService.deleteWalks(warlsBoardIdx, user);
       return res.status(StatusCodes.CREATED).send({
         result: result,
       });

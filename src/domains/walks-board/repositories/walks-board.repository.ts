@@ -6,6 +6,7 @@ import { PageRequest } from '../../../core/page';
 import { SaveFileDto } from '../../file/dtos/save.file.dto';
 import { HttpErrorConstants } from '../../../core/http/http-error-objects';
 import { WinstonLogger } from '../../../utils/logger/logger';
+import { User } from 'src/domains/auth/dtos/user.dto';
 
 @Injectable()
 export class BoardRepository {
@@ -90,6 +91,24 @@ export class BoardRepository {
       const board = await this.prisma.walks_board.findUnique({
         where: {
           idx: warlsBoardIdx,
+        },
+      });
+
+      if (!board) {
+        throw new Error(`게시글을 찾을 수 없습니다: ${warlsBoardIdx}`);
+      }
+      return board; // 조회된 walks_board 리스트 반환
+    } catch (error) {
+      throw new Error(`Failed to fetch board: ${error.message}`);
+    }
+  }
+
+  async getBoardByIdxAndUserId(warlsBoardIdx: number, user: User): Promise<walks_board | null> {
+    try {
+      const board = await this.prisma.walks_board.findUnique({
+        where: {
+          idx: warlsBoardIdx,
+          user_idx: user.idx,
         },
       });
 
