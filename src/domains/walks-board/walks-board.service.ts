@@ -27,18 +27,21 @@ export class BoardService {
   ) {
     try {
       let savedFiles = [];
-      const createdBoard = await this.boardRepository.createBoard(
-        dto,
-        userIdx,
-        savedFiles,
-      );
-      console.log('isFiles?: ', files);
       // 파일 저장
       if (files && files.length > 0) {
         savedFiles = await this.fileService.saveFiles(
           files,
           FilePath.WALKS_BOARD_PATH,
         );
+      }
+
+      const createdBoard = await this.boardRepository.createBoard(
+        dto,
+        userIdx,
+        savedFiles,
+      );
+
+      if (files && files.length > 0) {
         await this.kafkaService.sendMessage(
           Topic.WALKS_BOARD_CREATE,
           createdBoard,
