@@ -11,7 +11,6 @@ import { WinstonLogger } from '../../utils/logger/logger';
 import { HttpErrorConstants } from '../../core/http/http-error-objects';
 import { FileService } from '../file/file.service';
 import { FilePath } from './helpers/constants';
-import { log } from 'console';
 
 @Injectable()
 export class BoardService {
@@ -41,7 +40,7 @@ export class BoardService {
         );
         await this.kafkaService.sendMessage(
           Topic.WALKS_BOARD_CREATE,
-          createdBoard.idx,
+          createdBoard,
         );
       }
       return createdBoard;
