@@ -103,7 +103,10 @@ export class BoardRepository {
     }
   }
 
-  async getBoardByIdxAndUserId(warlsBoardIdx: number, user: User): Promise<walks_board | null> {
+  async getBoardByIdxAndUserId(
+    warlsBoardIdx: number,
+    user: User,
+  ): Promise<walks_board | null> {
     try {
       const board = await this.prisma.walks_board.findUnique({
         where: {

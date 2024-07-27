@@ -136,8 +136,7 @@ export class Boardcontroller {
 
   @ApiOperation({
     summary: '산책 게시글 삭제',
-    description:
-      '산책 게시글을 삭제합니다.',
+    description: '산책 게시글을 삭제합니다.',
   })
   @ApiBody({ type: boardJoinDto })
   @UseAuthGuards()

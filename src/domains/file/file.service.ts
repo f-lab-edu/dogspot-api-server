@@ -15,9 +15,10 @@ export class FileService {
     process.env.BASE_FILE_DIR || '/default/path';
 
   constructor() {
+    const path = `home/mun/${this.baseUploadPath}`;
     // 업로드 디렉토리 생성 (존재하지 않는 경우)
-    if (!fs.existsSync(this.baseUploadPath)) {
-      fs.mkdirSync(this.baseUploadPath, { recursive: true });
+    if (!fs.existsSync(path)) {
+      fs.mkdirSync(path, { recursive: true });
     }
   }
 

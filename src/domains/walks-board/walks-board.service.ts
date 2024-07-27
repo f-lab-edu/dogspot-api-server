@@ -86,7 +86,10 @@ export class BoardService {
 
   async deleteWalks(warlsBoardIdx: number, user: User) {
     try {
-      const board = await this.boardRepository.getBoardByIdxAndUserId(warlsBoardIdx, user);
+      const board = await this.boardRepository.getBoardByIdxAndUserId(
+        warlsBoardIdx,
+        user,
+      );
       if (!board) {
         throw new Error(`Board not found.`);
       }
