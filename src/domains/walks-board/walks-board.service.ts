@@ -32,6 +32,7 @@ export class BoardService {
         userIdx,
         savedFiles,
       );
+      console.log('isFiles?: ', files);
       // 파일 저장
       if (files && files.length > 0) {
         savedFiles = await this.fileService.saveFiles(
