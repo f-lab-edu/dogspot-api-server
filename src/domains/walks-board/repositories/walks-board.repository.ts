@@ -13,7 +13,10 @@ export class BoardRepository {
   readonly prisma: PrismaClient;
 
   constructor() {
-    this.prisma = new PrismaClient();
+    this.prisma = new PrismaClient({
+      log: ['info'],
+    });
+    this.prisma.user.findMany();
   }
 
   async createBoard(

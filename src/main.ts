@@ -7,6 +7,8 @@ import { AllExceptionsFilter } from './core/middleware/ExceptionsHandler';
 import { WinstonLogger } from './utils/logger/logger';
 
 async function bootstrap() {
+  console.log('!!!!!!!');
+  
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
     logger: WinstonLogger, // replacing logger
