@@ -3,9 +3,12 @@ import { ValidationPipe, VersioningType } from '@nestjs/common';
 
 import { AppModule } from './app.module';
 import { initSwagger } from './core/swagger/swagger-config';
+import { AllExceptionsFilter } from './core/middleware/ExceptionsHandler';
 import { WinstonLogger } from './utils/logger/logger';
 
 async function bootstrap() {
+  console.log('!!!!!!!');
+  
   const app = await NestFactory.create(AppModule, {
     bufferLogs: true,
     logger: WinstonLogger, // replacing logger
@@ -15,7 +18,8 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
-  await app.startAllMicroservices();
+
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
   // 스웨거 시작
   initSwagger(app);

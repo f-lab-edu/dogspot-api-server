@@ -11,12 +11,6 @@ export class User {
   idx: number;
 
   @ApiProperty({
-    description: '유저 번호',
-    default: 1,
-  })
-  userIdx: number;
-
-  @ApiProperty({
     description: '이메일',
     default: 'asd123@gmail.com',
   })

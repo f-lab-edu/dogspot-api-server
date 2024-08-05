@@ -4,12 +4,12 @@ import { ConfigModule } from '@nestjs/config';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { walksBoardModule } from './domains/walks_board/walks-board.module';
 import { KafkaModule } from './domains/kafka/kafka.module';
 
 import { AuthModule } from './domains/auth/auth.module';
 import { LoggerContextMiddleware } from './core/middleware/LoggerContextMiddleware';
 import { AllExceptionsFilter } from './core/middleware/ExceptionsHandler';
+import { walksBoardModule } from './domains/walks-board/walks-board.module';
 
 @Module({
   imports: [
