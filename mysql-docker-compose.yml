@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql-master:
+    image: mysql:latest
+    container_name: mysql-master
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: flab
+      MYSQL_PASSWORD: flab2024
+    command: --server-id=1 --log-bin=mysql-bin --binlog-do-db=mydb
+    volumes:
+      - master-data:/var/lib/mysql
+      - ./master-init.sql:/docker-entrypoint-initdb.d/master-init.sql
+    networks:
+      - mysql-replication-net
+    ports:
+      - "3306:3306"
+
+  mysql-slave:
+    image: mysql:latest
+    container_name: mysql-slave
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password
+    command: --server-id=2
+    volumes:
+      - slave-data:/var/lib/mysql
+      - ./slave-init.sh:/docker-entrypoint-initdb.d/slave-init.sh
+    networks:
+      - mysql-replication-net
+    depends_on:
+      - mysql-master
+    entrypoint: /bin/bash /docker-entrypoint-initdb.d/slave-init.sh
+    ports:
+      - "3307:3306"
+
+volumes:
+  master-data:
+  slave-data:
+
+networks:
+  mysql-replication-net:
+    driver: bridge
+

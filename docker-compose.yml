@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  app1:
+    image: wngh46280/dogspot-api-server:latest
+    container_name: dogspot-api-server1
+    ports:
+      - "3000:3000"
+
+  app2:
+    image: wngh46280/dogspot-api-server:latest
+    container_name: dogspot-api-server2
+    ports:
+      - "30001:3000"
+
+  app3:
+    image: wngh46280/dogspot-auth-server:latest
+    container_name: dogspot-auth-server
+    ports:
+      - "3001:3000"
+  
+  app4:
+    image: wngh46280/dogspot-socket-server:latest
+    container_name: dogspot-socket-server
+    ports:
+      - "3003:3000"
+
+  app5:
+    image: wngh46280/dogspot-media-server:latest
+    container_name: dogspot-media-server
+    ports:
+      - "3005:3000"
+      
+  app6:
+    image: wngh46280/dogspot-businesslogic-server:latest
+    container_name: dogspot-businesslogic-server
+    ports:
+      - "3004:3000"
